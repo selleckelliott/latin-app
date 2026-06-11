@@ -1,12 +1,10 @@
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { Button } from '../../components/ui/button';
-import type { Screen } from '../../app/App';
 
-interface VocabularyLessonProps {
-  onNavigate: (screen: Screen) => void;
-}
-
-export function VocabularyLesson({ onNavigate }: VocabularyLessonProps) {
+export function VocabularyLesson() {
+  const { sid, uid } = useParams<{ sid: string; uid: string }>();
+  const navigate = useNavigate();
   const [currentCard, setCurrentCard] = useState(0);
   const [showMeaning, setShowMeaning] = useState(false);
 
@@ -32,7 +30,7 @@ export function VocabularyLesson({ onNavigate }: VocabularyLessonProps) {
   };
 
   return (
-    <div className="p-6 min-h-[600px] flex flex-col">
+    <div className="p-6 flex-1 flex flex-col">
       {/* Progress */}
       <div className="text-center mb-6">
         <p className="text-lg text-gray-600">
@@ -90,7 +88,7 @@ export function VocabularyLesson({ onNavigate }: VocabularyLessonProps) {
       {/* Navigation */}
       <div className="mt-6 flex space-x-4">
         <Button
-          onClick={() => onNavigate('studentHome')}
+          onClick={() => navigate(`/student/${sid}`)}
           className="flex-1 h-12 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-xl"
         >
           Back
@@ -98,7 +96,7 @@ export function VocabularyLesson({ onNavigate }: VocabularyLessonProps) {
 
         {currentCard >= words.length - 1 && (
           <Button
-            onClick={() => onNavigate('grammarGame')}
+            onClick={() => navigate(`/student/${sid}/unit/${uid}/grammar`)}
             className="flex-1 h-12 bg-gray-600 hover:bg-gray-500 text-white rounded-xl"
           >
             Next Lesson

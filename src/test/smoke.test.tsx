@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import App from '../app/App';
+import { renderApp, resetAppState, screen } from './helpers';
 
 describe('app smoke test', () => {
-  it('renders the app shell', () => {
-    render(<App />);
-    expect(screen.getByText('Latin Learning App')).toBeInTheDocument();
+  it('renders onboarding on a fresh install', async () => {
+    await resetAppState();
+    renderApp('/');
+    expect(await screen.findByText("Let's set up your family's Latin app")).toBeInTheDocument();
   });
 });

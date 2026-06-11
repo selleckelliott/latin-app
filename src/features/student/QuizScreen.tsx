@@ -1,14 +1,10 @@
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { Button } from '../../components/ui/button';
-import type { Screen } from '../../app/App';
 
-interface QuizScreenProps {
-  onNavigate: (screen: Screen) => void;
-  setScore: (score: number) => void;
-  setTotal: (total: number) => void;
-}
-
-export function QuizScreen({ onNavigate, setScore, setTotal }: QuizScreenProps) {
+export function QuizScreen() {
+  const { sid, uid } = useParams<{ sid: string; uid: string }>();
+  const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string>('');
@@ -42,23 +38,22 @@ export function QuizScreen({ onNavigate, setScore, setTotal }: QuizScreenProps) 
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer('');
     } else {
-      // Calculate final score
       let correctCount = 0;
       questions.forEach((q, index) => {
         if (newAnswers[index] === q.correct) {
           correctCount++;
         }
       });
-      setScore(correctCount);
-      setTotal(questions.length);
-      onNavigate('results');
+      navigate(`/student/${sid}/unit/${uid}/results`, {
+        state: { score: correctCount, total: questions.length },
+      });
     }
   };
 
   const currentQ = questions[currentQuestion];
 
   return (
-    <div className="p-6 min-h-[600px] flex flex-col">
+    <div className="p-6 flex-1 flex flex-col">
       {/* Progress */}
       <div className="text-center mb-6">
         <p className="text-lg text-gray-600">
@@ -102,7 +97,7 @@ export function QuizScreen({ onNavigate, setScore, setTotal }: QuizScreenProps) 
       {/* Navigation */}
       <div className="flex space-x-4">
         <Button
-          onClick={() => onNavigate('studentHome')}
+          onClick={() => navigate(`/student/${sid}`)}
           className="flex-1 h-12 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-xl"
         >
           Back

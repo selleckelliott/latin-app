@@ -1,19 +1,17 @@
+import { useNavigate } from 'react-router';
 import { Button } from '../../components/ui/button';
-import type { Screen } from '../../app/App';
 
-interface ParentHomeProps {
-  onNavigate: (screen: Screen) => void;
-}
+export function ParentHome() {
+  const navigate = useNavigate();
 
-export function ParentHome({ onNavigate }: ParentHomeProps) {
+  // Placeholder rows until phase 7 wires real profiles + derived stats.
   const students = [
-    { name: 'Marcus', lessonsCompleted: 15, averageScore: 85 },
-    { name: 'Julia', lessonsCompleted: 12, averageScore: 92 },
-    { name: 'Lucius', lessonsCompleted: 8, averageScore: 78 },
+    { id: 'marcus', name: 'Marcus', lessonsCompleted: 15, averageScore: 85 },
+    { id: 'julia', name: 'Julia', lessonsCompleted: 12, averageScore: 92 },
   ];
 
   return (
-    <div className="p-6 min-h-[600px] flex flex-col">
+    <div className="p-6 flex-1 flex flex-col">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-2xl text-gray-800 mb-2">Parent Dashboard</h1>
@@ -22,11 +20,12 @@ export function ParentHome({ onNavigate }: ParentHomeProps) {
 
       {/* Student List */}
       <div className="flex-1 space-y-4 mb-6">
-        {students.map((student, index) => (
-          <div
-            key={index}
-            onClick={() => onNavigate('progressView')}
-            className="bg-gray-100 rounded-2xl p-4 cursor-pointer hover:bg-gray-200 transition-colors"
+        {students.map((student) => (
+          <button
+            key={student.id}
+            type="button"
+            onClick={() => navigate(`/parent/student/${student.id}`)}
+            className="w-full bg-gray-100 rounded-2xl p-4 hover:bg-gray-200 transition-colors text-left"
           >
             <div className="flex justify-between items-center">
               <div>
@@ -38,21 +37,14 @@ export function ParentHome({ onNavigate }: ParentHomeProps) {
                 <p className="text-sm text-gray-600">Avg Score</p>
               </div>
             </div>
-          </div>
+          </button>
         ))}
       </div>
 
       {/* Action Buttons */}
       <div className="space-y-4">
         <Button
-          onClick={() => onNavigate('progressView')}
-          className="w-full h-14 text-lg bg-gray-600 hover:bg-gray-500 text-white rounded-2xl"
-        >
-          View Progress
-        </Button>
-
-        <Button
-          onClick={() => onNavigate('assignLesson')}
+          onClick={() => navigate('/parent/assign')}
           className="w-full h-14 text-lg bg-gray-800 hover:bg-gray-700 text-white rounded-2xl"
         >
           Assign Lesson
@@ -61,10 +53,10 @@ export function ParentHome({ onNavigate }: ParentHomeProps) {
 
       {/* Back Button */}
       <Button
-        onClick={() => onNavigate('login')}
+        onClick={() => navigate('/')}
         className="w-full h-12 mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-xl"
       >
-        Back to Login
+        Back to profiles
       </Button>
     </div>
   );

@@ -1,13 +1,13 @@
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { Button } from '../../components/ui/button';
-import type { Screen } from '../../app/App';
 
-interface ResultsScreenProps {
-  score: number;
-  total: number;
-  onNavigate: (screen: Screen) => void;
-}
-
-export function ResultsScreen({ score, total, onNavigate }: ResultsScreenProps) {
+export function ResultsScreen() {
+  const { sid, uid } = useParams<{ sid: string; uid: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = (location.state ?? null) as { score: number; total: number } | null;
+  const score = state?.score ?? 0;
+  const total = state?.total ?? 1;
   const percentage = Math.round((score / total) * 100);
 
   const getEmoji = () => {
@@ -23,7 +23,7 @@ export function ResultsScreen({ score, total, onNavigate }: ResultsScreenProps) 
   };
 
   return (
-    <div className="p-6 min-h-[600px] flex flex-col items-center justify-center">
+    <div className="p-6 flex-1 flex flex-col items-center justify-center">
       {/* Score Display */}
       <div className="text-center mb-8">
         <div className="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl">
@@ -43,14 +43,14 @@ export function ResultsScreen({ score, total, onNavigate }: ResultsScreenProps) 
       {/* Action Buttons */}
       <div className="w-full space-y-4">
         <Button
-          onClick={() => onNavigate('quiz')}
+          onClick={() => navigate(`/student/${sid}/unit/${uid}/quiz`)}
           className="w-full h-14 text-lg bg-gray-600 hover:bg-gray-500 text-white rounded-2xl"
         >
           Try Again
         </Button>
 
         <Button
-          onClick={() => onNavigate('studentHome')}
+          onClick={() => navigate(`/student/${sid}`)}
           className="w-full h-14 text-lg bg-gray-800 hover:bg-gray-700 text-white rounded-2xl"
         >
           Back to Home

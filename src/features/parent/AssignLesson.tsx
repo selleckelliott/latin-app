@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Button } from '../../components/ui/button';
 import {
   Select,
@@ -7,27 +8,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../components/ui/select';
-import type { Screen } from '../../app/App';
 
-interface AssignLessonProps {
-  onNavigate: (screen: Screen) => void;
-}
-
-export function AssignLesson({ onNavigate }: AssignLessonProps) {
+export function AssignLesson() {
+  const navigate = useNavigate();
   const [selectedLesson, setSelectedLesson] = useState('');
   const [selectedStudent, setSelectedStudent] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const lessons = [
-    'Vocabulary 1: Basic Words',
-    'Vocabulary 2: Family & Home',
-    'Grammar 1: Noun Endings',
-    'Grammar 2: Verb Forms',
-    'Quiz 1: Mixed Review',
-  ];
-
-  const students = ['Marcus', 'Julia', 'Lucius'];
+  // Placeholder options until phase 7 wires real profiles + content.
+  const lessons = ['Vocabulary: Starter Pack', 'Grammar: Starter Pack', 'Quiz: Starter Pack'];
+  const students = ['Marcus', 'Julia'];
 
   const handleAssign = () => {
     if (selectedLesson && selectedStudent && dueDate) {
@@ -37,7 +28,7 @@ export function AssignLesson({ onNavigate }: AssignLessonProps) {
 
   if (showConfirmation) {
     return (
-      <div className="p-6 min-h-[600px] flex flex-col items-center justify-center">
+      <div className="p-6 flex-1 flex flex-col items-center justify-center">
         <div className="text-center mb-8">
           <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center text-3xl">
             ✅
@@ -64,7 +55,7 @@ export function AssignLesson({ onNavigate }: AssignLessonProps) {
           </Button>
 
           <Button
-            onClick={() => onNavigate('parentHome')}
+            onClick={() => navigate('/parent')}
             className="w-full h-12 bg-gray-800 hover:bg-gray-700 text-white rounded-xl"
           >
             Back to Dashboard
@@ -75,7 +66,7 @@ export function AssignLesson({ onNavigate }: AssignLessonProps) {
   }
 
   return (
-    <div className="p-6 min-h-[600px] flex flex-col">
+    <div className="p-6 flex-1 flex flex-col">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-2xl text-gray-800 mb-2">Assign Lesson</h1>
@@ -120,8 +111,11 @@ export function AssignLesson({ onNavigate }: AssignLessonProps) {
 
         {/* Due Date */}
         <div>
-          <label className="block text-lg text-gray-800 mb-3">Due Date</label>
+          <label htmlFor="due-date" className="block text-lg text-gray-800 mb-3">
+            Due Date
+          </label>
           <input
+            id="due-date"
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
@@ -141,7 +135,7 @@ export function AssignLesson({ onNavigate }: AssignLessonProps) {
         </Button>
 
         <Button
-          onClick={() => onNavigate('parentHome')}
+          onClick={() => navigate('/parent')}
           className="w-full h-12 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-xl"
         >
           Cancel

@@ -1,12 +1,10 @@
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { Button } from '../../components/ui/button';
-import type { Screen } from '../../app/App';
 
-interface GrammarGameProps {
-  onNavigate: (screen: Screen) => void;
-}
-
-export function GrammarGame({ onNavigate }: GrammarGameProps) {
+export function GrammarGame() {
+  const { sid, uid } = useParams<{ sid: string; uid: string }>();
+  const navigate = useNavigate();
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: string }>({});
   const [showResults, setShowResults] = useState(false);
 
@@ -38,7 +36,7 @@ export function GrammarGame({ onNavigate }: GrammarGameProps) {
   };
 
   return (
-    <div className="p-6 min-h-[600px] flex flex-col">
+    <div className="p-6 flex-1 flex flex-col">
       {/* Title */}
       <div className="text-center mb-8">
         <h1 className="text-2xl text-gray-800 mb-2">Grammar Game</h1>
@@ -98,7 +96,7 @@ export function GrammarGame({ onNavigate }: GrammarGameProps) {
         </Button>
       ) : (
         <Button
-          onClick={() => onNavigate('quiz')}
+          onClick={() => navigate(`/student/${sid}/unit/${uid}/quiz`)}
           className="w-full h-14 text-lg bg-gray-800 hover:bg-gray-700 text-white rounded-2xl mb-4"
         >
           Continue to Quiz
@@ -107,7 +105,7 @@ export function GrammarGame({ onNavigate }: GrammarGameProps) {
 
       {/* Back Button */}
       <Button
-        onClick={() => onNavigate('studentHome')}
+        onClick={() => navigate(`/student/${sid}`)}
         className="w-full h-12 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-xl"
       >
         Back to Home
