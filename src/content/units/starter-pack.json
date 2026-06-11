@@ -1,0 +1,89 @@
+{
+  "id": "starter-pack",
+  "title": "Starter Pack – Grade 2",
+  "order": 1,
+  "vocab": [
+    { "id": "v-puella", "latin": "puella", "meaning": "girl", "emoji": "👧" },
+    { "id": "v-puer", "latin": "puer", "meaning": "boy", "emoji": "👦" },
+    { "id": "v-canis", "latin": "canis", "meaning": "dog", "emoji": "🐶" },
+    { "id": "v-aqua", "latin": "aqua", "meaning": "water", "emoji": "💧" },
+    { "id": "v-luna", "latin": "luna", "meaning": "moon", "emoji": "🌙" },
+    { "id": "v-sol", "latin": "sol", "meaning": "sun", "emoji": "☀️" },
+    { "id": "v-casa", "latin": "casa", "meaning": "house", "emoji": "🏠" },
+    { "id": "v-templum", "latin": "templum", "meaning": "temple", "emoji": "🏛️" }
+  ],
+  "grammar": [
+    {
+      "id": "g-ending-puella",
+      "word": "puella",
+      "options": ["-a", "-us", "-um"],
+      "correct": "-a"
+    },
+    {
+      "id": "g-ending-puer",
+      "word": "puer",
+      "options": ["-a", "-us", "-um"],
+      "correct": "-us"
+    },
+    {
+      "id": "g-ending-templum",
+      "word": "templum",
+      "options": ["-a", "-us", "-um"],
+      "correct": "-um"
+    },
+    {
+      "id": "g-amo-2sg",
+      "word": "amo, ___, amat",
+      "options": ["amas", "amant", "amamus"],
+      "correct": "amas"
+    },
+    {
+      "id": "g-amo-3pl",
+      "word": "amamus, amatis, ___",
+      "options": ["amat", "amant", "amas"],
+      "correct": "amant"
+    },
+    {
+      "id": "g-sum-3sg",
+      "word": "sum, es, ___",
+      "options": ["est", "sunt", "estis"],
+      "correct": "est"
+    },
+    {
+      "id": "g-sum-2pl",
+      "word": "sumus, ___, sunt",
+      "options": ["es", "estis", "est"],
+      "correct": "estis"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-aqua",
+      "prompt": "What does 'aqua' mean?",
+      "emoji": "💧",
+      "choices": ["fire", "water", "earth", "air"],
+      "answerIndex": 1
+    },
+    {
+      "id": "q-canis",
+      "prompt": "What does 'canis' mean?",
+      "emoji": "🐶",
+      "choices": ["cat", "dog", "bird", "fish"],
+      "answerIndex": 1
+    },
+    {
+      "id": "q-sol",
+      "prompt": "What does 'sol' mean?",
+      "emoji": "☀️",
+      "choices": ["moon", "star", "sun", "cloud"],
+      "answerIndex": 2
+    },
+    {
+      "id": "q-amo",
+      "prompt": "Fill in: amo, ___, amat",
+      "emoji": "❤️",
+      "choices": ["amat", "amas", "amant", "amamus"],
+      "answerIndex": 1
+    }
+  ]
+}
