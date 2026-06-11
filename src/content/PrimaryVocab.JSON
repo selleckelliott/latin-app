@@ -1,21 +1,27 @@
 {
-  "units": [{
-    "id": "u1",
-    "title": "Starter Pack – Grade 2",
-    "vocab": [
-      {"latin":"puella","meaning":"girl","emoji":"👧"},
-      {"latin":"puer","meaning":"boy","emoji":"👦"},
-      {"latin":"canis","meaning":"dog","emoji":"🐶"},
-      {"latin":"aqua","meaning":"water","emoji":"💧"},
-      {"latin":"luna","meaning":"moon","emoji":"🌙"}
-    ],
-    "grammar": {
-      "amo_present": ["amo","amas","amat","amamus","amatis","amant"],
-      "sum_present": ["sum","es","est","sumus","estis","sunt"]
-    },
-    "quiz": [
-      {"q":"What does *canis* mean?","choices":["cat","dog","bird","fish"],"answer":1},
-      {"q":"Fill: *amo, __ , amat*","choices":["amat","amas","amant","amamus"],"answer":1}
-    ]
-  }]
+  "units": [
+    {
+      "id": "u1",
+      "title": "Starter Pack – Grade 2",
+      "vocab": [
+        { "latin": "puella", "meaning": "girl", "emoji": "👧" },
+        { "latin": "puer", "meaning": "boy", "emoji": "👦" },
+        { "latin": "canis", "meaning": "dog", "emoji": "🐶" },
+        { "latin": "aqua", "meaning": "water", "emoji": "💧" },
+        { "latin": "luna", "meaning": "moon", "emoji": "🌙" }
+      ],
+      "grammar": {
+        "amo_present": ["amo", "amas", "amat", "amamus", "amatis", "amant"],
+        "sum_present": ["sum", "es", "est", "sumus", "estis", "sunt"]
+      },
+      "quiz": [
+        { "q": "What does *canis* mean?", "choices": ["cat", "dog", "bird", "fish"], "answer": 1 },
+        {
+          "q": "Fill: *amo, __ , amat*",
+          "choices": ["amat", "amas", "amant", "amamus"],
+          "answer": 1
+        }
+      ]
+    }
+  ]
 }
