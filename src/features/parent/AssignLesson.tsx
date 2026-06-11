@@ -1,3 +1,4 @@
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Button } from '../../components/ui/button';
@@ -8,45 +9,69 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../../components/ui/select';
+import { getUnit, getUnits } from '../../content/loader';
+import { repos } from '../../data';
+import type { Activity, Assignment } from '../../domain/types';
+import { ACTIVITIES } from '../../domain/types';
+import { ACTIVITY_META } from '../student/activity-meta';
 
 export function AssignLesson() {
   const navigate = useNavigate();
-  const [selectedLesson, setSelectedLesson] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState('');
+  const students = useLiveQuery(() => repos.profiles.students(), []);
+  const units = getUnits();
+
+  const [studentId, setStudentId] = useState('');
+  const [unitId, setUnitId] = useState('');
+  const [activity, setActivity] = useState<Activity | ''>('');
   const [dueDate, setDueDate] = useState('');
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [confirmed, setConfirmed] = useState<Assignment | null>(null);
 
-  // Placeholder options until phase 7 wires real profiles + content.
-  const lessons = ['Vocabulary: Starter Pack', 'Grammar: Starter Pack', 'Quiz: Starter Pack'];
-  const students = ['Marcus', 'Julia'];
+  const canAssign = studentId !== '' && unitId !== '' && activity !== '' && dueDate !== '';
 
-  const handleAssign = () => {
-    if (selectedLesson && selectedStudent && dueDate) {
-      setShowConfirmation(true);
-    }
+  const handleAssign = async () => {
+    if (!canAssign || saving) return;
+    setSaving(true);
+    const assignment: Assignment = {
+      id: crypto.randomUUID(),
+      studentId,
+      unitId,
+      activity,
+      dueDate,
+      status: 'assigned',
+      assignedAt: new Date().toISOString(),
+    };
+    await repos.assignments.add(assignment);
+    setConfirmed(assignment);
+    setSaving(false);
   };
 
-  if (showConfirmation) {
+  if (confirmed) {
+    const student = students?.find((s) => s.id === confirmed.studentId);
+    const unit = getUnit(confirmed.unitId);
     return (
       <div className="p-6 flex-1 flex flex-col items-center justify-center">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 w-full">
           <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center text-3xl">
             ✅
           </div>
           <h1 className="text-2xl text-gray-800 mb-4">Lesson Assigned!</h1>
           <div className="bg-gray-100 rounded-2xl p-4">
-            <p className="text-gray-800">{selectedLesson}</p>
-            <p className="text-gray-600">assigned to {selectedStudent}</p>
-            <p className="text-gray-600">Due: {dueDate}</p>
+            <p className="text-gray-800">
+              {ACTIVITY_META[confirmed.activity].title} · {unit?.title ?? confirmed.unitId}
+            </p>
+            <p className="text-gray-600">assigned to {student?.name ?? confirmed.studentId}</p>
+            <p className="text-gray-600">Due: {confirmed.dueDate}</p>
           </div>
         </div>
 
         <div className="w-full space-y-4">
           <Button
             onClick={() => {
-              setShowConfirmation(false);
-              setSelectedLesson('');
-              setSelectedStudent('');
+              setConfirmed(null);
+              setStudentId('');
+              setUnitId('');
+              setActivity('');
               setDueDate('');
             }}
             className="w-full h-12 bg-gray-600 hover:bg-gray-500 text-white rounded-xl"
@@ -77,32 +102,64 @@ export function AssignLesson() {
       <div className="flex-1 space-y-6">
         {/* Student Selection */}
         <div>
-          <label className="block text-lg text-gray-800 mb-3">Select Student</label>
-          <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-            <SelectTrigger className="w-full h-12 text-lg rounded-xl border-2 border-gray-300">
+          <label className="block text-lg text-gray-800 mb-3" id="assign-student-label">
+            Select Student
+          </label>
+          <Select value={studentId} onValueChange={setStudentId}>
+            <SelectTrigger
+              aria-labelledby="assign-student-label"
+              className="w-full h-12 text-lg rounded-xl border-2 border-gray-300"
+            >
               <SelectValue placeholder="Choose a student" />
             </SelectTrigger>
             <SelectContent>
-              {students.map((student) => (
-                <SelectItem key={student} value={student} className="text-lg">
-                  {student}
+              {students?.map((student) => (
+                <SelectItem key={student.id} value={student.id} className="text-lg">
+                  {student.avatarEmoji} {student.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Lesson Selection */}
+        {/* Unit Selection */}
         <div>
-          <label className="block text-lg text-gray-800 mb-3">Select Lesson</label>
-          <Select value={selectedLesson} onValueChange={setSelectedLesson}>
-            <SelectTrigger className="w-full h-12 text-lg rounded-xl border-2 border-gray-300">
-              <SelectValue placeholder="Choose a lesson" />
+          <label className="block text-lg text-gray-800 mb-3" id="assign-unit-label">
+            Select Unit
+          </label>
+          <Select value={unitId} onValueChange={setUnitId}>
+            <SelectTrigger
+              aria-labelledby="assign-unit-label"
+              className="w-full h-12 text-lg rounded-xl border-2 border-gray-300"
+            >
+              <SelectValue placeholder="Choose a unit" />
             </SelectTrigger>
             <SelectContent>
-              {lessons.map((lesson) => (
-                <SelectItem key={lesson} value={lesson} className="text-lg">
-                  {lesson}
+              {units.map((unit) => (
+                <SelectItem key={unit.id} value={unit.id} className="text-lg">
+                  {unit.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Activity Selection */}
+        <div>
+          <label className="block text-lg text-gray-800 mb-3" id="assign-activity-label">
+            Select Activity
+          </label>
+          <Select value={activity} onValueChange={(value) => setActivity(value as Activity)}>
+            <SelectTrigger
+              aria-labelledby="assign-activity-label"
+              className="w-full h-12 text-lg rounded-xl border-2 border-gray-300"
+            >
+              <SelectValue placeholder="Choose an activity" />
+            </SelectTrigger>
+            <SelectContent>
+              {ACTIVITIES.map((value) => (
+                <SelectItem key={value} value={value} className="text-lg">
+                  {ACTIVITY_META[value].emoji} {ACTIVITY_META[value].title}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -119,7 +176,7 @@ export function AssignLesson() {
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="w-full h-12 text-lg rounded-xl border-2 border-gray-300 px-4"
+            className="w-full h-12 text-lg rounded-xl border-2 border-gray-300 px-4 bg-white"
           />
         </div>
       </div>
@@ -127,8 +184,8 @@ export function AssignLesson() {
       {/* Action Buttons */}
       <div className="space-y-4 mt-8">
         <Button
-          onClick={handleAssign}
-          disabled={!selectedLesson || !selectedStudent || !dueDate}
+          onClick={() => void handleAssign()}
+          disabled={!canAssign || saving}
           className="w-full h-14 text-lg bg-gray-800 hover:bg-gray-700 text-white rounded-2xl disabled:bg-gray-400"
         >
           Assign Lesson
